@@ -1,0 +1,72 @@
+/* Editor highlighting styles */
+.highlighted-code-line {
+  background-color: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid #3B82F6;
+  transition: all 0.2s ease-in-out;
+}
+
+.highlighted-code-glyph {
+  background-color: #3B82F6;
+  width: 4px !important;
+  margin-left: 3px;
+  transition: all 0.2s ease-in-out;
+}
+
+.selected-code-line {
+  background-color: rgba(37, 99, 235, 0.15);
+  border-left: 3px solid #2563EB;
+  transition: all 0.2s ease-in-out;
+}
+
+.selected-code-glyph {
+  background-color: #2563EB;
+  width: 4px !important;
+  margin-left: 3px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Monaco Editor customizations */
+.monaco-editor .margin {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.monaco-editor .view-line {
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Highlight the entire line content */
+.monaco-editor .view-overlays .selected-code-line,
+.monaco-editor .view-overlays .highlighted-code-line {
+  width: 100% !important;
+}
+
+/* Node hover effects in diagram */
+.mermaid .node:hover {
+  cursor: pointer;
+  filter: brightness(1.1);
+}
+
+.mermaid .node.selected rect,
+.mermaid .node.selected circle,
+.mermaid .node.selected polygon {
+  stroke: #2563EB !important;
+  stroke-width: 3px !important;
+}
+
+/* Fullscreen styles */
+:fullscreen .monaco-editor,
+:fullscreen .preview-panel {
+  height: 100vh !important;
+}
+
+:fullscreen .toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+:fullscreen .editor-preview-container {
+  padding-top: 4rem;
+}

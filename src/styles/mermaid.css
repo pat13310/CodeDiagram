@@ -1,0 +1,193 @@
+/* Base container styles */
+.mermaid {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(249,250,251,0.9));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  position: relative;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+/* SVG container styles */
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.1));
+}
+
+/* Node styles */
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon,
+.mermaid .node path {
+  stroke-width: 2px;
+  rx: 8px;
+  ry: 8px;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+/* Enhanced Node hover effects */
+.mermaid .node:hover rect,
+.mermaid .node:hover circle,
+.mermaid .node:hover ellipse,
+.mermaid .node:hover polygon,
+.mermaid .node:hover path {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+  stroke-width: 2.5px;
+}
+
+/* Node selection styles */
+.mermaid .node.selected rect,
+.mermaid .node.selected circle,
+.mermaid .node.selected ellipse,
+.mermaid .node.selected polygon,
+.mermaid .node.selected path {
+  stroke-width: 3px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  transform: translateY(-2px);
+}
+
+/* Edge styles */
+.mermaid .edgePath .path {
+  stroke-width: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Edge hover effects */
+.mermaid .edgePath:hover .path {
+  stroke-width: 2.5px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* Edge labels */
+.mermaid .edgeLabel {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.mermaid .edgeLabel:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Label text styles */
+.mermaid .label {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* Cluster styles */
+.mermaid .cluster rect {
+  fill: rgba(249, 250, 251, 0.8);
+  stroke: rgba(209, 213, 219, 0.8);
+  rx: 8px;
+  ry: 8px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
+  backdrop-filter: blur(8px);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animations */
+.mermaid .node,
+.mermaid .edgePath,
+.mermaid .cluster {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Enhanced text styles */
+.mermaid text {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Flow diagram specific styles */
+.mermaid .flowchart-link {
+  stroke-width: 2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* State diagram specific styles */
+.mermaid .stateGroup rect {
+  rx: 8px;
+  ry: 8px;
+}
+
+/* Sequence diagram specific styles */
+.mermaid .actor {
+  stroke-width: 2px;
+  fill: #fff;
+}
+
+.mermaid .messageLine0,
+.mermaid .messageLine1 {
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+
+/* Class diagram specific styles */
+.mermaid .classGroup rect {
+  rx: 6px;
+  ry: 6px;
+}
+
+/* Gantt chart specific styles */
+.mermaid .taskText {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.mermaid .grid .tick line {
+  stroke: rgba(209, 213, 219, 0.4);
+}
+
+/* Z-index management */
+.mermaid .node {
+  cursor: pointer;
+  z-index: 2;
+}
+
+.mermaid .node:hover,
+.mermaid .node.selected {
+  z-index: 3;
+}
+
+.mermaid .edgePath {
+  z-index: 1;
+}
+
+.mermaid .edgePath:hover {
+  z-index: 2;
+}
+
+.mermaid .cluster {
+  z-index: 0;
+}

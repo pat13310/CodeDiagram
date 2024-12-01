@@ -1,12 +1,33 @@
 import { MermaidConfig } from 'mermaid';
 import { getThemeConfig } from './themes';
 
-export const getMermaidConfig = (theme: string = 'modern'): MermaidConfig => {
+// Extend the MermaidConfig interface to include fontawesome and gantt weekday
+export interface ExtendedMermaidConfig extends MermaidConfig {
+  fontawesome?: {
+    cssImport?: string[];
+  };
+  gantt?: {
+    weekday?: any;
+  } & MermaidConfig['gantt'];
+  journey?: {
+    fontSize?: number;
+  } & MermaidConfig['journey'];
+  flowchart?: {
+    fill?: string;
+  } & MermaidConfig['flowchart'];
+}
+
+export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfig {
   const themeColors = getThemeConfig(theme);
 
   return {
     theme: 'base',
     themeVariables: themeColors,
+    startOnLoad: false,
+    securityLevel: 'loose',
+    logLevel: 'debug', // Change to debug for more information
+    fontFamily: 'sans-serif',
+    fontSize: 16,
     flowchart: {
       curve: 'basis',
       padding: 20,
@@ -14,6 +35,7 @@ export const getMermaidConfig = (theme: string = 'modern'): MermaidConfig => {
       rankSpacing: 50,
       htmlLabels: true,
       useMaxWidth: true,
+      fill: 'white', // Add default fill color
     },
     sequence: {
       diagramMarginX: 50,
@@ -25,9 +47,36 @@ export const getMermaidConfig = (theme: string = 'modern'): MermaidConfig => {
       boxTextMargin: 5,
       noteMargin: 10,
       messageMargin: 35,
-      mirrorActors: false,
+      mirrorActors: true,
       bottomMarginAdj: 1,
       useMaxWidth: true,
+      rightAngles: false,
+      showSequenceNumbers: false,
+    },
+    pie: {
+      textPosition: 0.5,
+      useWidth: 100,
+      useMaxWidth: 200,
+    },
+    classDiagram: {
+      diagramPadding: 8,
+      useMaxWidth: true,
+      htmlLabels: true,
+    },
+    stateDiagram: {
+      diagramPadding: 8,
+      useMaxWidth: true,
+      defaultRenderer: 'dagre',
+    },
+    journey: {
+      diagramMarginX: 50,
+      diagramMarginY: 20,
+      taskMargin: 50,
+      width: 150,
+      height: 50,
+      boxMargin: 10,
+      useMaxWidth: true,
+      fontSize: 14,
     },
     gantt: {
       titleTopMargin: 25,
@@ -38,14 +87,12 @@ export const getMermaidConfig = (theme: string = 'modern'): MermaidConfig => {
       gridLineStartPadding: 35,
       fontSize: 11,
       sectionFontSize: 11,
+      fontFamily: '"Open Sans", sans-serif',
       numberSectionStyles: 4,
       axisFormat: '%Y-%m-%d',
       topAxis: false,
+      useMaxWidth: true,
     },
-    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-    logLevel: 'error',
-    securityLevel: 'loose',
-    startOnLoad: false,
     fontawesome: {
       cssImport: [
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/solid.min.css',
@@ -53,4 +100,4 @@ export const getMermaidConfig = (theme: string = 'modern'): MermaidConfig => {
       ]
     }
   };
-};
+}

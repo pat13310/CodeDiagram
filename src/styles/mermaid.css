@@ -1,75 +1,75 @@
 /* Base container styles */
 .mermaid {
-  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(249,250,251,0.9));
+  background: linear-gradient(135deg, rgb(249 250 251 / 0.65), rgb(255 255 255));
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-  padding: 2rem;
-  position: relative;
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  backdrop-filter: blur(8px);
+  padding: 1rem;
 }
 
 /* SVG container styles */
 .mermaid svg {
   max-width: 100%;
+  max-height: 100%;
+  width: auto;
   height: auto;
   transition: all 0.3s ease;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.1));
 }
 
-/* Node styles */
-.mermaid .node rect,
-.mermaid .node circle,
-.mermaid .node ellipse,
-.mermaid .node polygon,
-.mermaid .node path {
-  stroke-width: 2px;
-  rx: 8px;
-  ry: 8px;
+/* SVG specific styles */
+g.node rect,
+g.node circle,
+g.node ellipse,
+g.node polygon,
+g.node path {
   transition: all 0.3s ease;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  stroke-width: 2px;
+  fill: rgb(249 250 251); /* gray-50 */
+  stroke: rgb(75 85 99); /* gray-600 */
+}
+
+g.node:hover rect,
+g.node:hover circle,
+g.node:hover ellipse,
+g.node:hover polygon,
+g.node:hover path {
+  stroke-width: 3px;
+  fill: rgb(243 244 246); /* gray-100 */
+  stroke: rgb(37 99 235); /* blue-600 */
 }
 
 /* Enhanced Node hover effects */
-.mermaid .node:hover rect,
-.mermaid .node:hover circle,
-.mermaid .node:hover ellipse,
-.mermaid .node:hover polygon,
-.mermaid .node:hover path {
-  transform: translateY(-2px);
+g[class*="flowchart-"]:hover > * {
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
   stroke-width: 2.5px;
+  cursor: pointer;
+  fill: rgb(243 244 246);
+  stroke: rgb(37 99 235);
 }
 
-/* Node selection styles */
-.mermaid .node.selected rect,
-.mermaid .node.selected circle,
-.mermaid .node.selected ellipse,
-.mermaid .node.selected polygon,
-.mermaid .node.selected path {
-  stroke-width: 3px;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
-  transform: translateY(-2px);
+/* Node Label Container hover */
+g[class*="flowchart-"]:hover .label {
+  cursor: pointer;
+  fill: rgb(37 99 235);
 }
 
 /* Edge styles */
-.mermaid .edgePath .path {
+[id^="mermaid-"] .edgePath .path {
   stroke-width: 2px;
   transition: all 0.3s ease;
 }
 
 /* Edge hover effects */
-.mermaid .edgePath:hover .path {
+[id^="mermaid-"] .edgePath:hover .path {
   stroke-width: 2.5px;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 /* Edge labels */
-.mermaid .edgeLabel {
+[id^="mermaid-"] .edgeLabel {
   background-color: rgba(255, 255, 255, 0.95);
   padding: 6px 10px;
   border-radius: 6px;
@@ -80,27 +80,63 @@
   transition: all 0.3s ease;
 }
 
-.mermaid .edgeLabel:hover {
+[id^="mermaid-"] .edgeLabel:hover {
   transform: scale(1.05);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Label text styles */
-.mermaid .label {
+[id^="mermaid-"] .label {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.9375rem;
   font-weight: 500;
   transition: all 0.3s ease;
 }
 
+[id^="mermaid-"] .label-container {
+  cursor: pointer; /* Ajoute le curseur en forme de main */
+  transition: all 0.3s ease;
+  fill: #f0f0f0; /* Couleur par défaut */
+}
+
+[id^="mermaid-"] .label-container:hover {
+  fill: #e9ecef;
+  stroke: #2563eb;
+  cursor: pointer;
+}
+
+[id^="mermaid-"] polygon.label-container {
+  fill: #f0f0f0;
+  stroke: #333;
+  stroke-width: 1;
+  cursor: pointer;
+  transition: fill 0.3s ease;
+}
+
+[id^="mermaid-"] polygon.label-container:hover {
+  fill: #ffa500; /* orange */
+}
+
 /* Cluster styles */
-.mermaid .cluster rect {
+[id^="mermaid-"] .cluster rect {
   fill: rgba(249, 250, 251, 0.8);
   stroke: rgba(209, 213, 219, 0.8);
   rx: 8px;
   ry: 8px;
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
   backdrop-filter: blur(8px);
+}
+
+/* Node shape hover effects */
+.diagram-node-shape:hover {
+  stroke-width: 3px;
+  fill: rgb(243 244 246); /* gray-100 */
+  stroke: rgb(37 99 235); /* blue-600 */
+}
+
+/* Node label hover effects */
+.diagram-node-label:hover {
+  color: rgb(37 99 235); /* blue-600 */
 }
 
 /* Animation keyframes */
@@ -116,78 +152,112 @@
 }
 
 /* Apply animations */
-.mermaid .node,
-.mermaid .edgePath,
-.mermaid .cluster {
+[id^="mermaid-"] g.node,
+[id^="mermaid-"] .edgePath,
+[id^="mermaid-"] .cluster {
   animation: fadeIn 0.3s ease-out forwards;
 }
 
 /* Enhanced text styles */
-.mermaid text {
+[id^="mermaid-"] text {
   font-weight: 500;
   letter-spacing: -0.01em;
 }
 
 /* Flow diagram specific styles */
-.mermaid .flowchart-link {
+[id^="mermaid-"] .flowchart-link {
   stroke-width: 2px;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 /* State diagram specific styles */
-.mermaid .stateGroup rect {
+[id^="mermaid-"] .stateGroup rect {
   rx: 8px;
   ry: 8px;
 }
 
 /* Sequence diagram specific styles */
-.mermaid .actor {
+[id^="mermaid-"] .actor {
   stroke-width: 2px;
   fill: #fff;
 }
 
-.mermaid .messageLine0,
-.mermaid .messageLine1 {
+[id^="mermaid-"] .messageLine0,
+[id^="mermaid-"] .messageLine1 {
   stroke-width: 2px;
   stroke-linecap: round;
 }
 
 /* Class diagram specific styles */
-.mermaid .classGroup rect {
+[id^="mermaid-"] .classGroup rect {
   rx: 6px;
   ry: 6px;
 }
 
 /* Gantt chart specific styles */
-.mermaid .taskText {
+[id^="mermaid-"] .taskText {
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-.mermaid .grid .tick line {
+[id^="mermaid-"] .grid .tick line {
   stroke: rgba(209, 213, 219, 0.4);
 }
 
 /* Z-index management */
-.mermaid .node {
+[id^="mermaid-"] g.node {
   cursor: pointer;
   z-index: 2;
 }
 
-.mermaid .node:hover,
-.mermaid .node.selected {
+[id^="mermaid-"] g.node:hover,
+[id^="mermaid-"] g.node.selected {
   z-index: 3;
 }
 
-.mermaid .edgePath {
+[id^="mermaid-"] .edgePath {
   z-index: 1;
 }
 
-.mermaid .edgePath:hover {
+[id^="mermaid-"] .edgePath:hover {
   z-index: 2;
 }
 
-.mermaid .cluster {
+[id^="mermaid-"] .cluster {
   z-index: 0;
+}
+
+/* Scrollbar styles */
+.overflow-auto::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.overflow-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+#mermaid-diagram {
+  overflow: visible !important; /* Force l'absence de scroll */
+  transform-origin: center center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Base diagram styles */
+.mermaid {
+  background: linear-gradient(135deg, rgb(249 250 251 / 0.65), rgb(255 255 255));
 }

@@ -5,14 +5,15 @@ interface ToolbarButtonProps {
   icon: React.ReactNode;
   onClick: () => void;
   tooltip: string;
+  className?: string;
 }
 
-export function ToolbarButton({ icon, onClick, tooltip }: ToolbarButtonProps) {
+export function ToolbarButton({ icon, onClick, tooltip, className = 'text-stone-200 hover:text-white hover:bg-stone-700/50' }: ToolbarButtonProps) {
   return (
     <Tooltip content={tooltip}>
       <button
         onClick={onClick}
-        className="p-2 text-gray-300 hover:text-white rounded-md hover:bg-gray-700 transition-colors duration-200"
+        className={`p-2 rounded-md transition-colors duration-200 ${className}`}
       >
         {icon}
       </button>

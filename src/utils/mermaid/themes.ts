@@ -291,6 +291,25 @@ const themeColors: Record<string, ThemeColors> = {
     labelTextColor: '#3F6212',
     edgeColor: '#84CC16'
   },
+  // Thème gris-marron personnalisé
+  stone: {
+    background: '#1C1917',
+    primaryColor: '#57534E',
+    secondaryColor: '#44403C',
+    tertiaryColor: '#292524',
+    primaryTextColor: '#E7E5E4',
+    primaryBorderColor: '#78716C',
+    lineColor: '#78716C',
+    textColor: '#D6D3D1',
+    mainBkg: '#1C1917',
+    nodeBorder: '#78716C',
+    clusterBkg: '#292524',
+    clusterBorder: '#44403C',
+    edgeLabelBackground: '#292524',
+    nodeTextColor: '#E7E5E4',
+    labelTextColor: '#D6D3D1',
+    edgeColor: '#78716C'
+  },
   // Classic themes
   neutral: {
     background: '#FAFAFA',

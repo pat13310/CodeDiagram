@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import './styles/mermaid.css';
+@import './styles/editor.css';
+@import './styles/tailwind.css';
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -16,9 +16,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-@import './styles/mermaid.css';
-@import './styles/editor.css';
 
 /* Custom scrollbar styles */
 .custom-scrollbar::-webkit-scrollbar {

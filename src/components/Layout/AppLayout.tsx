@@ -8,7 +8,7 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-gray-900 to-gray-800">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-stone-950 to-neutral-900">
       {children}
       <Toaster {...ToasterConfig} />
     </div>

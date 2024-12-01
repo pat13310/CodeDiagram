@@ -1,29 +1,27 @@
 import mermaid from 'mermaid';
-import { getMermaidConfig } from './config';
+import { getThemeConfig } from './themes';
+import { getMermaidConfig, ExtendedMermaidConfig } from './config';
 
-export const initializeMermaid = (theme: string = 'lemon'): void => {
-  try {
-    const config = getMermaidConfig(theme);
-    mermaid.initialize({
-      ...config,
-      fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-      logLevel: 'error',
-      securityLevel: 'loose',
-      startOnLoad: false,
-      flowchart: {
-        ...config.flowchart,
-        htmlLabels: true,
-        curve: 'basis',
-        defaultRenderer: 'dagre-d3'
-      },
-      themeVariables: {
-        ...config.themeVariables,
-        fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
-        fontSize: '16px',
-        fontWeight: 'normal'
-      }
-    });
-  } catch (error) {
-    console.error('Failed to initialize Mermaid:', error);
+let currentTheme: string | null = null;
+
+export async function initializeMermaid(theme: string) {
+  if (currentTheme === theme) {
+    return;
   }
-};
+
+  const config = getMermaidConfig(theme);
+  
+  try {
+    // Reset Mermaid before initializing
+    mermaid.mermaidAPI.reset();
+    
+    // Initialize with new config
+    mermaid.initialize(config);
+    
+    currentTheme = theme;
+    console.log('Mermaid initialized with theme:', theme);
+  } catch (error) {
+    console.error('Error initializing Mermaid:', error);
+    throw error;
+  }
+}

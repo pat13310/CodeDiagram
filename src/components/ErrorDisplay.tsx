@@ -2,6 +2,7 @@ import React from 'react';
 
 interface ErrorDisplayProps {
   message?: string;
+  error?: string;
 }
 
 export function ErrorDisplay({ message = 'Please check your Mermaid syntax' }: ErrorDisplayProps) {

@@ -1,15 +1,15 @@
 /* Editor highlighting styles */
 .highlighted-code-line {
-  background-color: rgba(59, 130, 246, 0.1);
-  border-left: 3px solid #3B82F6;
-  transition: all 0.2s ease-in-out;
+  background: linear-gradient(90deg, rgba(0, 122, 204, 0.1) 0%, rgba(0, 122, 204, 0.05) 100%);
+  border-left: 3px solid #007acc;
+  animation: highlight-pulse 2s ease-in-out infinite;
 }
 
 .highlighted-code-glyph {
-  background-color: #3B82F6;
-  width: 4px !important;
+  background-color: #007acc;
+  width: 3px !important;
   margin-left: 3px;
-  transition: all 0.2s ease-in-out;
+  animation: glyph-pulse 2s ease-in-out infinite;
 }
 
 .selected-code-line {
@@ -23,6 +23,29 @@
   width: 4px !important;
   margin-left: 3px;
   transition: all 0.2s ease-in-out;
+}
+
+/* Animation de pulsation pour la ligne */
+@keyframes highlight-pulse {
+  0% {
+    background: linear-gradient(90deg, rgba(0, 122, 204, 0.1) 0%, rgba(0, 122, 204, 0.05) 100%);
+    border-left-color: #007acc;
+  }
+  50% {
+    background: linear-gradient(90deg, rgba(0, 122, 204, 0.2) 0%, rgba(0, 122, 204, 0.1) 100%);
+    border-left-color: #0098ff;
+  }
+  100% {
+    background: linear-gradient(90deg, rgba(0, 122, 204, 0.1) 0%, rgba(0, 122, 204, 0.05) 100%);
+    border-left-color: #007acc;
+  }
+}
+
+/* Animation de pulsation pour le marqueur */
+@keyframes glyph-pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
 }
 
 /* Monaco Editor customizations */
@@ -51,6 +74,23 @@
 .mermaid .node.selected polygon {
   stroke: #2563EB !important;
   stroke-width: 3px !important;
+}
+
+/* Style pour les nœuds du diagramme */
+.diagram-node {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.diagram-node:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+
+.diagram-node.active {
+  filter: brightness(1.2);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 122, 204, 0.3);
 }
 
 /* Fullscreen styles */

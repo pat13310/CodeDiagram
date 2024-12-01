@@ -1,17 +1,24 @@
-export function useUrlState() {
-  const loadFromUrl = (): string | null => {
+import { useEffect, useState } from 'react';
+
+export function useUrlState(key: string, defaultValue: string) {
+  const [value, setValue] = useState<string>(() => {
+    if (typeof window === 'undefined') return defaultValue;
+    
     const urlParams = new URLSearchParams(window.location.search);
-    const sharedCode = urlParams.get('code');
-    return sharedCode ? decodeURIComponent(sharedCode) : null;
-  };
+    const sharedValue = urlParams.get(key);
+    return sharedValue ? decodeURIComponent(sharedValue) : defaultValue;
+  });
 
-  const shareUrl = (code: string): string => {
-    const encodedCode = encodeURIComponent(code);
-    return `${window.location.origin}?code=${encodedCode}`;
-  };
+  useEffect(() => {
+    // Update URL when value changes
+    const url = new URL(window.location.href);
+    if (value === defaultValue) {
+      url.searchParams.delete(key);
+    } else {
+      url.searchParams.set(key, encodeURIComponent(value));
+    }
+    window.history.replaceState({}, '', url.toString());
+  }, [value, key, defaultValue]);
 
-  return {
-    loadFromUrl,
-    shareUrl,
-  };
+  return [value, setValue] as const;
 }

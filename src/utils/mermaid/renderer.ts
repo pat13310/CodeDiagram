@@ -1,66 +1,71 @@
 import mermaid from 'mermaid';
 import { initializeMermaid } from './initialize';
 
-export const renderMermaidDiagram = async (
+export async function renderMermaidDiagram(
   code: string,
   elementId: string,
-  theme: string = 'lemon'
-): Promise<void> => {
-  const element = document.getElementById(elementId);
-  if (!element) return;
-
+  theme: string,
+  onNodeClick?: (nodeId: string) => void
+) {
   try {
-    // Initialize with current theme
-    initializeMermaid(theme);
+    // Initialize Mermaid with the current theme
+    await initializeMermaid(theme);
 
-    // Clear previous content
-    element.innerHTML = '';
-    
-    // Create wrapper for centering
-    const wrapper = document.createElement('div');
-    wrapper.style.width = '100%';
-    wrapper.style.height = '100%';
-    wrapper.style.display = 'flex';
-    wrapper.style.justifyContent = 'center';
-    wrapper.style.alignItems = 'center';
-    element.appendChild(wrapper);
-
-    // Generate unique ID for this render
-    const uniqueId = `mermaid-${Date.now()}`;
-
-    // Render the diagram
-    const { svg } = await mermaid.render(uniqueId, code);
-    wrapper.innerHTML = svg;
-
-    // Post-process SVG
-    const svgElement = wrapper.querySelector('svg');
-    if (svgElement) {
-      svgElement.style.maxWidth = '100%';
-      svgElement.style.height = 'auto';
-      svgElement.style.borderRadius = '8px';
-      svgElement.style.padding = '16px';
-
-      // Fix viewBox if needed
-      const bbox = svgElement.getBBox();
-      svgElement.setAttribute('viewBox', `${bbox.x} ${bbox.y} ${bbox.width} ${bbox.height}`);
-      
-      // Ensure proper scaling
-      svgElement.setAttribute('width', '100%');
-      svgElement.setAttribute('height', '100%');
-      svgElement.style.minWidth = '200px';
+    const container = document.getElementById(elementId);
+    if (!container) {
+      throw new Error('Container element not found');
     }
 
-    // Add click handlers for nodes
-    const nodes = wrapper.querySelectorAll('.node');
-    nodes.forEach(node => {
-      node.addEventListener('click', () => {
-        nodes.forEach(n => n.classList.remove('selected'));
-        node.classList.add('selected');
-      });
-    });
+    // Clean and validate the code
+    let processedCode = code.trim();
+    
+    // Handle URL-encoded content
+    try {
+      if (processedCode.includes('%')) {
+        processedCode = decodeURIComponent(processedCode);
+      }
+    } catch (error) {
+      console.warn('Failed to decode URL-encoded content:', error);
+    }
 
+    // Replace escaped newlines
+    processedCode = processedCode.replace(/\\n/g, '\n');
+    
+    // Add theme configuration if not present
+    if (!processedCode.startsWith('%%{init:')) {
+      processedCode = `%%{init: {'theme': '${theme}'}}%%\n${processedCode}`;
+    }
+
+    console.log('Rendering diagram with code:', processedCode);
+
+    try {
+      // Generate unique ID for this render
+      const uniqueId = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Render the diagram
+      const { svg } = await mermaid.render(uniqueId, processedCode);
+      
+      // Update container with SVG
+      container.innerHTML = svg;
+
+      // Add click handlers if needed
+      if (onNodeClick) {
+        const nodes = container.querySelectorAll('[id^="node"]');
+        nodes.forEach(node => {
+          node.addEventListener('click', () => {
+            const nodeId = node.id.replace('node', '');
+            onNodeClick(nodeId);
+          });
+        });
+      }
+
+      return svg;
+    } catch (error) {
+      console.error('Error rendering diagram:', error);
+      throw new Error(`Failed to render diagram: ${error.message}`);
+    }
   } catch (error) {
-    console.error('Mermaid rendering error:', error);
-    throw new Error('Failed to render diagram. Please check your syntax.');
+    console.error('Error in renderMermaidDiagram:', error);
+    throw error;
   }
-};
+}

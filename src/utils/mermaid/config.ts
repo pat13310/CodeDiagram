@@ -36,9 +36,12 @@ export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfi
     themeVariables: themeColors,
     startOnLoad: false,
     securityLevel: 'loose',
-    logLevel: 'debug', // Change to debug for more information
+    logLevel: 'debug',
     fontFamily: 'sans-serif',
     fontSize: 16,
+    maxTextSize: 50000, // Augmenter la taille maximale du texte
+    useMaxWidth: true, // Utiliser la largeur maximale disponible
+    deterministicIds: true, // Assurer des IDs cohérents
     flowchart: {
       curve: 'basis',
       padding: 20,
@@ -46,28 +49,24 @@ export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfi
       rankSpacing: 50,
       htmlLabels: true,
       useMaxWidth: true,
-      fill: 'white', // Add default fill color
+      diagramPadding: 8,
+      fill: 'white',
+      wrap: true, // Permettre le retour à la ligne automatique
+    },
+    sequence: {
+      useMaxWidth: true,
+      diagramMarginX: 50,
+      diagramMarginY: 10,
+      actorMargin: 50,
+      boxMargin: 10,
+      mirrorActors: false,
+      bottomMarginAdj: 1,
+      showSequenceNumbers: false,
     },
     classDiagram2: {
       diagramPadding: 20,
       useMaxWidth: true,
       htmlLabels: true,
-    },
-    sequence: {
-      diagramMarginX: 50,
-      diagramMarginY: 20,
-      actorMargin: 100,
-      width: 150,
-      height: 65,
-      boxMargin: 10,
-      boxTextMargin: 5,
-      noteMargin: 10,
-      messageMargin: 35,
-      mirrorActors: true,
-      bottomMarginAdj: 1,
-      useMaxWidth: true,
-      rightAngles: false,
-      showSequenceNumbers: false,
     },
     pie: {
       textPosition: 0.5,

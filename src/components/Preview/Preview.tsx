@@ -24,10 +24,10 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const diagramRef = useRef<HTMLDivElement>(null);
-  
+
   const debouncedCode = useDebounce(code, 300);
   const debouncedTheme = useDebounce(theme, 300);
-  
+
   const { handleNodeClick, cleanup } = useDiagramInteraction(editorInstance);
 
   const wrappedHandleNodeClick = useCallback((nodeId: string) => {
@@ -51,7 +51,7 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
       try {
         const container = diagramRef.current;
         container.innerHTML = '';
-        
+
         // Créer un conteneur pour le diagramme
         const diagramContainer = document.createElement('div');
         diagramContainer.id = 'mermaid-diagram-content';
@@ -72,19 +72,27 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
           const viewBox = svg.getAttribute('viewBox')?.split(' ').map(Number) || [];
           const [, , width, height] = viewBox;
 
-          if (width && height) {
+          // Récupérer les dimensions naturelles si viewBox n'est pas disponible
+          const naturalWidth = width || parseInt(svg.getAttribute('width') || '0', 10);
+          const naturalHeight = height || parseInt(svg.getAttribute('height') || '0', 10);
+
+          if (naturalWidth && naturalHeight) {
             // Configurer le SVG pour un affichage correct
             svg.style.display = 'block';
-            svg.style.width = `${width}px`;
-            svg.style.height = `${height}px`;
+            svg.style.width = `${naturalWidth}px`;
+            svg.style.height = `${naturalHeight}px`;
             svg.style.margin = '0 auto'; // Centre horizontalement
-            
+            svg.style.maxWidth = '100%'; // Empêche le débordement horizontal
+            svg.style.height = 'auto'; // Maintient le ratio d'aspect
+
             // Ajuster le conteneur pour le centrage vertical
             diagramContainer.style.display = 'flex';
             diagramContainer.style.flexDirection = 'column';
             diagramContainer.style.alignItems = 'center';
             diagramContainer.style.justifyContent = 'center';
             diagramContainer.style.width = '100%';
+            diagramContainer.style.minHeight = '100%';
+            diagramContainer.style.overflow = 'auto';
           }
         }
       } catch (error) {
@@ -120,38 +128,48 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
       onReset={onReset}
     >
       <div className="relative w-full h-full">
-        <div className="absolute inset-0 overflow-y-auto">
-          <div 
-            className="min-h-full flex flex-col"
+        <div 
+          className="absolute inset-0"
+          style={{
+            overflow: zoom > 1 ? 'auto' : 'hidden'
+          }}
+        >
+          <div
+            className="min-h-full w-full flex"
             style={{
-              minHeight: zoom > 1 ? `${Math.max(zoom * 150, 150)}%` : '100%',
+              minHeight: zoom > 1 ? `${zoom * 100}%` : '100%'
             }}
           >
-            <div className="flex-grow flex items-center justify-center p-8">
-              {isLoading && (
-                <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50 z-10">
-                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                </div>
-              )}
-              
-              <div 
-                ref={diagramRef}
-                className={clsx(
-                  'bg-white dark:bg-stone-900 rounded-lg shadow-lg p-4',
-                  'transition-all duration-150 ease-out',
-                  isLoading ? 'opacity-50' : 'opacity-100'
-                )}
+            <div 
+              className="w-full flex items-center justify-center"
+            >
+              <div
                 style={{
-                  transform: `scale(${zoom})`,
+                  transform: `scale(${Math.max(zoom, 0.25)})`,
                   transformOrigin: 'center center'
                 }}
-              />
-              
-              {error && (
-                <div className="absolute bottom-4 left-4 right-4 z-10">
-                  <ErrorDisplay error={error} />
-                </div>
-              )}
+              >
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50 z-10">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                  </div>
+                )}
+                
+                <div 
+                  ref={diagramRef}
+                  className={clsx(
+                    'bg-white dark:bg-stone-900 rounded-lg shadow-lg p-4',
+                    'transition-all duration-150 ease-out',
+                    isLoading ? 'opacity-50' : 'opacity-100'
+                  )}
+                />
+
+                {error && (
+                  <div className="absolute bottom-4 left-4 right-4 z-10">
+                    <ErrorDisplay error={error} />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

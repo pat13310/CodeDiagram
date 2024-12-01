@@ -79,20 +79,30 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
           if (naturalWidth && naturalHeight) {
             // Configurer le SVG pour un affichage correct
             svg.style.display = 'block';
-            svg.style.width = `${naturalWidth}px`;
-            svg.style.height = `${naturalHeight}px`;
-            svg.style.margin = '0 auto'; // Centre horizontalement
-            svg.style.maxWidth = '100%'; // Empêche le débordement horizontal
-            svg.style.height = 'auto'; // Maintient le ratio d'aspect
-
-            // Ajuster le conteneur pour le centrage vertical
+            svg.style.width = '100%';
+            svg.style.height = '100%';
+            svg.style.maxHeight = '80vh';
+            svg.style.margin = '0 auto';
+            svg.style.objectFit = 'contain';
+            
+            // Ajuster le conteneur pour le centrage
             diagramContainer.style.display = 'flex';
-            diagramContainer.style.flexDirection = 'column';
             diagramContainer.style.alignItems = 'center';
             diagramContainer.style.justifyContent = 'center';
             diagramContainer.style.width = '100%';
-            diagramContainer.style.minHeight = '100%';
-            diagramContainer.style.overflow = 'auto';
+            diagramContainer.style.height = '100%';
+            diagramContainer.style.position = 'relative';
+
+            // Optimiser le viewBox pour un meilleur rendu
+            const bbox = svg.getBBox();
+            const padding = 20; // Ajouter un peu d'espace autour
+            svg.setAttribute('viewBox', 
+              `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + padding * 2} ${bbox.height + padding * 2}`
+            );
+
+            // Améliorer la qualité du rendu
+            svg.style.shapeRendering = 'geometricPrecision';
+            svg.style.textRendering = 'geometricPrecision';
           }
         }
       } catch (error) {
@@ -127,51 +137,43 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
       onZoomOut={onZoomOut}
       onReset={onReset}
     >
-      <div className="relative w-full h-full">
+      <div className="w-full h-full bg-white dark:bg-stone-900">
         <div 
-          className="absolute inset-0"
-          style={{
-            overflow: zoom > 1 ? 'auto' : 'hidden'
-          }}
+          className="w-full h-full overflow-auto relative"
         >
           <div
-            className="min-h-full w-full flex"
+            className={clsx(
+              "w-full flex justify-center p-4",
+              zoom <= 1 ? "h-full items-center" : "items-start"
+            )}
             style={{
               minHeight: zoom > 1 ? `${zoom * 100}%` : '100%'
             }}
           >
-            <div 
-              className="w-full flex items-center justify-center"
-            >
-              <div
-                style={{
-                  transform: `scale(${Math.max(zoom, 0.25)})`,
-                  transformOrigin: 'center center'
-                }}
-              >
-                {isLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50 z-10">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                )}
-                
-                <div 
-                  ref={diagramRef}
-                  className={clsx(
-                    'bg-white dark:bg-stone-900 rounded-lg shadow-lg p-4',
-                    'transition-all duration-150 ease-out',
-                    isLoading ? 'opacity-50' : 'opacity-100'
-                  )}
-                />
-
-                {error && (
-                  <div className="absolute bottom-4 left-4 right-4 z-10">
-                    <ErrorDisplay error={error} />
-                  </div>
-                )}
-              </div>
-            </div>
+            <div
+              ref={diagramRef}
+              className={clsx(
+                'transition-all duration-150 ease-out w-full h-full',
+                isLoading ? 'opacity-50' : 'opacity-100'
+              )}
+              style={{
+                transform: `scale(${Math.max(zoom, 0.25)})`,
+                transformOrigin: zoom > 1 ? 'top center' : 'center center'
+              }}
+            />
           </div>
+
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50 z-10">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500" />
+            </div>
+          )}
+
+          {error && (
+            <div className="absolute bottom-4 left-4 right-4 z-10">
+              <ErrorDisplay error={error} />
+            </div>
+          )}
         </div>
       </div>
     </PreviewPanel>

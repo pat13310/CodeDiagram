@@ -22,11 +22,11 @@ export function ZoomControls({ zoom, onZoomIn, onZoomOut, onReset, className }: 
         onClick={onZoomOut}
         className={clsx(
           'p-1.5 rounded-md transition-all duration-200',
-          zoom <= 0.25
+          zoom <= 0.1
             ? 'text-stone-600 cursor-not-allowed'
             : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800'
         )}
-        disabled={zoom <= 0.25}
+        disabled={zoom <= 0.1}
         title="Zoom out"
       >
         <MagnifyingGlassMinusIcon className="h-4 w-4" />
@@ -44,11 +44,11 @@ export function ZoomControls({ zoom, onZoomIn, onZoomOut, onReset, className }: 
         onClick={onZoomIn}
         className={clsx(
           'p-1.5 rounded-md transition-all duration-200',
-          zoom >= 2
+          zoom >= 3
             ? 'text-stone-600 cursor-not-allowed'
             : 'text-stone-400 hover:text-stone-200 hover:bg-stone-800'
         )}
-        disabled={zoom >= 2}
+        disabled={zoom >= 3}
         title="Zoom in"
       >
         <MagnifyingGlassPlusIcon className="h-4 w-4" />

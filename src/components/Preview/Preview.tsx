@@ -49,14 +49,15 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
       setError(null);
 
       try {
-        // Create container for diagram
         const container = diagramRef.current;
-        container.innerHTML = '<div id="mermaid-diagram-content"></div>';
+        container.innerHTML = '';
+        
+        // Créer un conteneur pour le diagramme
+        const diagramContainer = document.createElement('div');
+        diagramContainer.id = 'mermaid-diagram-content';
+        diagramContainer.style.width = '100%';
+        container.appendChild(diagramContainer);
 
-        console.log('Rendering diagram with code:', debouncedCode);
-        console.log('Theme:', debouncedTheme);
-
-        // Render the diagram
         await renderMermaidDiagram(
           debouncedCode,
           'mermaid-diagram-content',
@@ -64,7 +65,28 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
           wrappedHandleNodeClick
         );
 
-        console.log('Diagram rendered successfully');
+        // Ajuster le SVG après le rendu
+        const svg = diagramContainer.querySelector('svg');
+        if (svg) {
+          // Récupérer les dimensions originales du SVG
+          const viewBox = svg.getAttribute('viewBox')?.split(' ').map(Number) || [];
+          const [, , width, height] = viewBox;
+
+          if (width && height) {
+            // Configurer le SVG pour un affichage correct
+            svg.style.display = 'block';
+            svg.style.width = `${width}px`;
+            svg.style.height = `${height}px`;
+            svg.style.margin = '0 auto'; // Centre horizontalement
+            
+            // Ajuster le conteneur pour le centrage vertical
+            diagramContainer.style.display = 'flex';
+            diagramContainer.style.flexDirection = 'column';
+            diagramContainer.style.alignItems = 'center';
+            diagramContainer.style.justifyContent = 'center';
+            diagramContainer.style.width = '100%';
+          }
+        }
       } catch (error) {
         console.error('Error rendering diagram:', error);
         if (isMounted) {
@@ -97,32 +119,42 @@ export function Preview({ code, theme, isFullscreen, onToggleFullscreen, editorI
       onZoomOut={onZoomOut}
       onReset={onReset}
     >
-      <div className="relative w-full h-full flex items-center justify-center p-4">
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+      <div className="relative w-full h-full">
+        <div className="absolute inset-0 overflow-y-auto">
+          <div 
+            className="min-h-full flex flex-col"
+            style={{
+              minHeight: zoom > 1 ? `${Math.max(zoom * 150, 150)}%` : '100%',
+            }}
+          >
+            <div className="flex-grow flex items-center justify-center p-8">
+              {isLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-stone-800/50 z-10">
+                  <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+                </div>
+              )}
+              
+              <div 
+                ref={diagramRef}
+                className={clsx(
+                  'bg-white dark:bg-stone-900 rounded-lg shadow-lg p-4',
+                  'transition-all duration-150 ease-out',
+                  isLoading ? 'opacity-50' : 'opacity-100'
+                )}
+                style={{
+                  transform: `scale(${zoom})`,
+                  transformOrigin: 'center center'
+                }}
+              />
+              
+              {error && (
+                <div className="absolute bottom-4 left-4 right-4 z-10">
+                  <ErrorDisplay error={error} />
+                </div>
+              )}
+            </div>
           </div>
-        )}
-        
-        <div 
-          ref={diagramRef}
-          className={clsx(
-            'w-full h-full flex items-center justify-center',
-            'bg-white dark:bg-stone-900 rounded-lg shadow-lg',
-            'transition-all duration-300 ease-in-out',
-            isLoading ? 'opacity-50' : 'opacity-100'
-          )}
-          style={{
-            transform: `scale(${zoom})`,
-            transformOrigin: 'center center'
-          }}
-        />
-        
-        {error && (
-          <div className="absolute bottom-4 left-4 right-4">
-            <ErrorDisplay error={error} />
-          </div>
-        )}
+        </div>
       </div>
     </PreviewPanel>
   );

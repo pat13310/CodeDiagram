@@ -8,6 +8,7 @@ export interface ExtendedMermaidConfig extends MermaidConfig {
   };
   gantt?: {
     weekday?: any;
+    fontFamily?: string;
   } & MermaidConfig['gantt'];
   journey?: {
     fontSize?: number;
@@ -15,6 +16,16 @@ export interface ExtendedMermaidConfig extends MermaidConfig {
   flowchart?: {
     fill?: string;
   } & MermaidConfig['flowchart'];
+  classDiagram2?: {
+    diagramPadding?: number;
+    useMaxWidth?: boolean;
+    htmlLabels?: boolean;
+  };
+  stateDiagram?: {
+    diagramPadding?: number;
+    useMaxWidth?: boolean;
+    defaultRenderer?: string;
+  };
 }
 
 export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfig {
@@ -37,6 +48,11 @@ export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfi
       useMaxWidth: true,
       fill: 'white', // Add default fill color
     },
+    classDiagram2: {
+      diagramPadding: 20,
+      useMaxWidth: true,
+      htmlLabels: true,
+    },
     sequence: {
       diagramMarginX: 50,
       diagramMarginY: 20,
@@ -56,17 +72,12 @@ export function getMermaidConfig(theme: string = 'modern'): ExtendedMermaidConfi
     pie: {
       textPosition: 0.5,
       useWidth: 100,
-      useMaxWidth: 200,
-    },
-    classDiagram: {
-      diagramPadding: 8,
       useMaxWidth: true,
-      htmlLabels: true,
     },
     stateDiagram: {
-      diagramPadding: 8,
+      diagramPadding: 20,
       useMaxWidth: true,
-      defaultRenderer: 'dagre',
+      defaultRenderer: 'dagre-wrapper',
     },
     journey: {
       diagramMarginX: 50,
